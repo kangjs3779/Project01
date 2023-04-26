@@ -62,7 +62,6 @@ public class BoardController {
 	@PostMapping("/modify/{id}")
 	public String modifyProcess(Board board, RedirectAttributes rttr) {
 //		System.out.println(board);
-		service.modify(board);
 		boolean ok = service.modify(board);
 		
 		if (ok) {
@@ -94,7 +93,16 @@ public class BoardController {
 	}
 	
 	
+	@GetMapping("add")
+	public void addForm() {
+		//게시물 작성 form (view)로 포워드
+		
+	}
 	
+	@PostMapping("add")
+	public void addProcess() {
+		//새 게시물 db에 추가
+	}
 	
 	
 	

@@ -27,14 +27,16 @@
 		</div>
 		<div>
 			<a class="btn btn-secondary" href="/modify/${board.id }">수정하기</a>
-			<button id="removeButton" class="btn btn-danger" form="removeForm" type="submit">삭제하기</button>
+			<button id="removeButton" class="btn btn-danger" form="removeForm" type="submit">
+				삭제하기
+			</button>
 		</div>
 	</div>
 	
 	<!-- 숨겨져있는 폼을 만들어서 작성함, 자바스크립트로도 작성할 수 있음 -->
 	<div class="d-none">
 		<form action="/remove" method="post" id="removeForm">
-			<input type="text" name="id"  value="${board.id }"/>
+			<input type="hidden" name="id"  value="${board.id }"/>
 		</form>
 	</div>
 	
