@@ -38,4 +38,10 @@ public class BoardService {
 		int count = mapper.deleteBtId(id);
 		return count == 1;
 	}
+
+	public boolean addBoard(Board board) {
+		int count = mapper.insert(board);
+		return count == 1;
+	}
+	
 }
