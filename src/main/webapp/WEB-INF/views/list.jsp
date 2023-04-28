@@ -55,6 +55,9 @@
 						<c:if test="${pageInfo.currentPageNum gt 1 }">
 							<c:url value="/list" var="pageLink">
 								<c:param name="page" value="${pageInfo.currentPageNum - 1 }" />
+								<c:if test="${not empty param.search  }">
+									<c:param name="search" value="${param.search }" />
+								</c:if>
 							</c:url>
 							<li class="page-item">
 								<a class="page-link " href="${pageLink }">
@@ -65,7 +68,11 @@
 
 						<c:forEach begin="${pageInfo.leftPageNum }" end="${pageInfo.rightPageNum }" var="pageNum">
 							<c:url value="/list" var="pageLink">
+							<!-- 파라미터를 붙여주는 태그 -->
 								<c:param name="page" value="${pageNum }" />
+								<c:if test="${not empty param.search  }">
+									<c:param name="search" value="${param.search }" />
+								</c:if>
 							</c:url>
 							<li class="page-item  ${pageNum == pageInfo.currentPageNum ? 'active' : '' }">
 								<a class="page-link " href="${pageLink }">${pageNum }</a>
@@ -76,6 +83,9 @@
 						<c:if test="${pageInfo.currentPageNum < pageInfo.lastPageNum }">
 							<c:url value="/list" var="pageLink">
 								<c:param name="page" value="${pageInfo.currentPageNum + 1 }" />
+								<c:if test="${not empty param.search  }">
+									<c:param name="search" value="${param.search }" />
+								</c:if>
 							</c:url>
 							<li class="page-item">
 								<a class="page-link " href="${pageLink }">
@@ -83,7 +93,6 @@
 								</a>
 							</li>
 						</c:if>
-
 					</ul>
 				</nav>
 			</div>
