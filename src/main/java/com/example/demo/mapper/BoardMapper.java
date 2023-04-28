@@ -52,4 +52,22 @@ public interface BoardMapper {
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	int insert(Board board);
 	
+	@Select("""
+			SELECT
+				id,
+				title,
+				writer,
+				inserted
+			FROM Board
+			ORDER BY id DESC
+			LIMIT #{startIndex}, #{rowPerPage}
+			""")
+	List<Board> selectAllPaging(Integer startIndex, Integer rowPerPage);
+	
+	@Select("""
+			SELECT COUNT(*)
+			FROM Board
+			""")
+	Integer countAll();
+	
 }

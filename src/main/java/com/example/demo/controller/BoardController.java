@@ -24,13 +24,18 @@ public class BoardController {
 	// 경로 : http://localhost:8080 or http://localhost:8080/list
 	// @RequestMapping({"/", "list"}, method = RequestMethod.GET)
 	@GetMapping({ "/", "list" })
-	public String list(Model model) { // 경로가 두개니까 두개의 jsp를 만들어야 하나? 귀찮으니까 void말고 string타입으로 forward하겠음
+	public String list(
+			Model model, 
+			@RequestParam(value = "page", defaultValue = "1") Integer page) { // 경로가 두개니까 두개의 jsp를 만들어야 하나? 귀찮으니까 void말고 string타입으로 forward하겠음
 		// 1. request param 수집/가공
 		// 2. business logic 처리
 //		List<Board> list = mapper.selectAll();
-		List<Board> list = service.listBoard();
+		//List<Board> list = service.listBoard(); 페이지 처리 전
+		Map<String, Object> result = service.listBoard(page); //페이지 철; 흐
 		// 3. add attribute
-		model.addAttribute("boardList", list);
+//		model.addAttribute("boardList", result.get("boardList"));
+//		model.addAttribute("pageInfo", result.get("pageInfo"));
+		model.addAllAttributes(result);
 
 		// 여기까지 잘 됨
 		// 4. forward/redirect
