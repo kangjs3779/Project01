@@ -21,10 +21,20 @@
 				</li>
 			</ul>
 			<form class="d-flex" role="search">
-				<input value="${param.search }" name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-				<button class="btn btn-outline-success" type="submit">
-					<i class="fa-solid fa-magnifying-glass"></i>
-				</button>
+				<!-- select option -->
+				<div class="input-group">
+					<select class="form-select flex-grow-0" style="width: 100px;" " name="type">
+						<option value="all">전체</option>
+						<option value="title" ${param.type == 'title' ? 'selected' : '' }>제목</option>
+						<option value="body" ${param.type == 'body' ? 'selected' : '' }>본문</option>
+						<option value="writer" ${param.type == 'writer' ? 'selected' : '' }>작성자</option>
+					</select>
+					<!-- search -->
+					<input value="${param.search }" name="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-outline-success" type="submit">
+						<i class="fa-solid fa-magnifying-glass"></i>
+					</button>
+				</div>
 			</form>
 		</div>
 	</div>

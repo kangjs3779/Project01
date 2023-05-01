@@ -53,45 +53,25 @@
 
 						<!-- 이전 버튼 -->
 						<c:if test="${pageInfo.currentPageNum gt 1 }">
-							<c:url value="/list" var="pageLink">
-								<c:param name="page" value="${pageInfo.currentPageNum - 1 }" />
-								<c:if test="${not empty param.search  }">
-									<c:param name="search" value="${param.search }" />
-								</c:if>
-							</c:url>
-							<li class="page-item">
-								<a class="page-link " href="${pageLink }">
-									<i class="fa-solid fa-angle-left"></i>
-								</a>
-							</li>
+							<!-- 페이지번호 : ${pageInfo.currentPageNum - 1 } -->
+							<d:pageItem pageNum="${pageInfo.currentPageNum - 1 }">
+								<i class="fa-solid fa-angle-left"></i>
+							</d:pageItem>
 						</c:if>
 
+						<!-- 페이지네이션 -->
 						<c:forEach begin="${pageInfo.leftPageNum }" end="${pageInfo.rightPageNum }" var="pageNum">
-							<c:url value="/list" var="pageLink">
-							<!-- 파라미터를 붙여주는 태그 -->
-								<c:param name="page" value="${pageNum }" />
-								<c:if test="${not empty param.search  }">
-									<c:param name="search" value="${param.search }" />
-								</c:if>
-							</c:url>
-							<li class="page-item  ${pageNum == pageInfo.currentPageNum ? 'active' : '' }">
-								<a class="page-link " href="${pageLink }">${pageNum }</a>
-							</li>
+							<d:pageItem pageNum="${pageNum }">
+								${pageNum }
+							</d:pageItem>
 						</c:forEach>
 
 						<!-- 다음 버튼 -->
 						<c:if test="${pageInfo.currentPageNum < pageInfo.lastPageNum }">
-							<c:url value="/list" var="pageLink">
-								<c:param name="page" value="${pageInfo.currentPageNum + 1 }" />
-								<c:if test="${not empty param.search  }">
-									<c:param name="search" value="${param.search }" />
-								</c:if>
-							</c:url>
-							<li class="page-item">
-								<a class="page-link " href="${pageLink }">
-									<i class="fa-solid fa-angle-right"></i>
-								</a>
-							</li>
+							<!-- 페이지번호 : ${pageInfo.currentPageNum + 1 } -->
+							<d:pageItem pageNum="${pageInfo.currentPageNum + 1 }">
+								<i class="fa-solid fa-angle-right"></i>
+							</d:pageItem>
 						</c:if>
 					</ul>
 				</nav>

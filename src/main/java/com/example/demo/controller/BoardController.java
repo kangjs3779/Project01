@@ -27,12 +27,13 @@ public class BoardController {
 	public String list(
 			Model model, 
 			@RequestParam(value = "page", defaultValue = "1") Integer page,
-			@RequestParam(value = "search", defaultValue = "") String search) { // 경로가 두개니까 두개의 jsp를 만들어야 하나? 귀찮으니까 void말고 string타입으로 forward하겠음
+			@RequestParam(value = "search", defaultValue = "") String search,
+			@RequestParam(value = "type", required = false) String type) { // 경로가 두개니까 두개의 jsp를 만들어야 하나? 귀찮으니까 void말고 string타입으로 forward하겠음
 		// 1. request param 수집/가공
 		// 2. business logic 처리
 //		List<Board> list = mapper.selectAll();
 		//List<Board> list = service.listBoard(); 페이지 처리 전
-		Map<String, Object> result = service.listBoard(page, search); //페이지 철; 흐
+		Map<String, Object> result = service.listBoard(page, search, type); //페이지 철; 흐
 		// 3. add attribute
 //		model.addAttribute("boardList", result.get("boardList"));
 //		model.addAttribute("pageInfo", result.get("pageInfo"));

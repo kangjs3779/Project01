@@ -15,7 +15,7 @@ public class BoardService {
 	@Autowired
 	private BoardMapper mapper;
 	
-	public List<Board> listBoard() {
+	public List<Board> listBoard(Integer page, String search) {
 		List<Board> list =  mapper.selectAll();
 		return list;
 		// 컨트롤러에게 준다
@@ -44,7 +44,7 @@ public class BoardService {
 		return count == 1;
 	}
 
-	public Map<String, Object> listBoard(Integer page, String search) {
+	public Map<String, Object> listBoard(Integer page, String search, String type) {
 		// 페이지 당 행의 수
 		Integer rowPerPage = 10;
 		Integer startIndex = (page -1) * rowPerPage;
@@ -52,7 +52,7 @@ public class BoardService {
 		
 		//페이지네이션이 필요한 정보
 		//전체 레코드의 개수
-		Integer numOfRecords = mapper.countAll(search);
+		Integer numOfRecords = mapper.countAll(search, type);
 		// 마지막 페이지 번호
 		Integer lastPageNumber = (numOfRecords - 1) / rowPerPage + 1;
 		
@@ -74,7 +74,7 @@ public class BoardService {
 		pageInfo.put("lastPageNum", lastPageNumber);
 //		pageInfo.put("lastPageNum", lastPageNumber);
 		
-		List<Board> list = mapper.selectAllPaging(startIndex, rowPerPage, search);
+		List<Board> list = mapper.selectAllPaging(startIndex, rowPerPage, search, type);
 		return Map.of("pageInfo", pageInfo,
 					  "boardList", list);
 		// 페이지네이션이 필요한 정보
