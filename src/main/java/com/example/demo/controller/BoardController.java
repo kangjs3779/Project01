@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.*;
 import org.springframework.web.servlet.mvc.support.*;
 
 import com.example.demo.domain.*;
@@ -39,6 +40,8 @@ public class BoardController {
 //		model.addAttribute("pageInfo", result.get("pageInfo"));
 		model.addAllAttributes(result);
 
+		System.out.println(result);
+		
 		// 여기까지 잘 됨
 		// 4. forward/redirect
 		return "list";
@@ -50,6 +53,7 @@ public class BoardController {
 		// 1.request param
 		// 2. business logic
 		Board board = service.getBoard(id);
+		System.out.println(board);
 		// 3. add attribute
 		model.addAttribute("board", board);
 		System.out.println(board);
@@ -106,10 +110,13 @@ public class BoardController {
 	}
 
 	@PostMapping("add")
-	public String addProcess(Board board, RedirectAttributes rt) {
+	public String addProcess(
+			Board board, 
+			RedirectAttributes rt,
+			@RequestParam("files") MultipartFile[] files) throws Exception {
 		// 새 게시물 db에 추가
 		// 파라미터에 String title...이렇게 적어도 되는데 자바빈에 프로퍼티 다 있으니까
-		boolean ok = service.addBoard(board);
+		boolean ok = service.addBoard(board, files);
 		if (ok) {
 			rt.addFlashAttribute("message", board.getTitle() + " 게시글이 추가가 되었습니다");
 			return "redirect:/id/" + board.getId();

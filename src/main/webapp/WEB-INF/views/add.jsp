@@ -16,7 +16,7 @@
 	
 	<div class="container-lg">
 		<h1>게시물 작성</h1>
-		<form action="" method="post" id="addForm">
+		<form action="" method="post" id="addForm" enctype="multipart/form-data">
 			<!-- action은 써도 되고 안써도 되고 아예 없애도 되고 -->
 			<!-- 내가 원하는데로 폼을 꾸며보기 -->
 			<div>
@@ -27,6 +27,11 @@
 				본문 :
 				<textarea name="body">${board.body }</textarea>
 			</div>
+			
+			<div>
+				파일 : <input type="file" multiple="multiple" name="files" accept="image/*"/>
+			</div>
+			
 			<div>
 				작성자 :
 				<input type="text" name="writer" value="${board.writer }" />

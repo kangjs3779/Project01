@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.BoardMapper">
+	
+	<!-- 어떤 타입으로 매핑해주면 되는지 type속성에 적으면 된다 -->
+	<resultMap type="com.example.demo.domain.Board" id="boardResultMap">
+		<id column="id" property="id"/> <!-- 키역할을 하는 애는 result말고 id로 적어주면 성능이 향상된다고 한다 -->
+		<result column="title" property="title"/>
+		<result column="body" property="body"/>
+		<result column="inserted" property="inserted"/>
+		<result column="writer" property="writer"/>
+		<!-- 어떤 컬럼이 어떤 프로퍼티에 매핑이 되어야 하는가 -->
+		<!-- 컬럼이름은 쿼리에서 따왔음, 프로퍼티는 자바빈에 있는 이름 -->
+		<collection property="fileName" ofType="string">
+			<result column="fileName"/>
+		</collection>
+		<!-- 여러개의 레코드가 나온다면 result가아니라 collection을 적어줘야 한다 -->
+	</resultMap>
+	<!--  -->
+</mapper>
+
+

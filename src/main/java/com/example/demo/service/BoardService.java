@@ -1,15 +1,20 @@
 package com.example.demo.service;
 
+import java.io.*;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
+import org.springframework.web.multipart.*;
 
 import com.example.demo.domain.*;
 import com.example.demo.mapper.*;
 
-@Service //특별한 component어노테이션이다 service역할을 하고 있는 component인 것이디
 //어차피 @component가 포함되어 있다
+//특별한 component어노테이션이다 service역할을 하고 있는 component인 것이디
+@Service 
+@Transactional(rollbackFor = Exception.class)
 public class BoardService {
 	
 	@Autowired
@@ -39,8 +44,40 @@ public class BoardService {
 		return count == 1;
 	}
 
-	public boolean addBoard(Board board) {
+	public boolean addBoard(Board board, MultipartFile[] files) throws Exception {
+		
 		int count = mapper.insert(board);
+
+		for(MultipartFile file : files) {
+			//파일이 있을 때만 저장을 해야 하니까
+			if(file.getSize() > 0) {
+				System.out.println(file.getOriginalFilename());
+				System.out.println(file.getSize());
+				// 파일 저장(파일 시스템에 저장)
+				String folder = "C:\\study\\upload\\" + board.getId();
+				File targetFolder = new File(folder);
+				if(!targetFolder.exists()) {
+					targetFolder.mkdirs();
+					//게시글의 기본키로 파일을 만드는 것
+				}
+				String path = folder + "\\" + file.getOriginalFilename();
+				File target = new File(path);
+				file.transferTo(target);
+				//db에 관련 정보 저장(insert)
+				mapper.insertFileName(board.getId(), file.getOriginalFilename());
+				
+				//이름은 같은데 내용은 다른 파일이 전송되면 덮어쓸 수 있으니까
+				//게시물마다 폴더를 만들어서 그 폴더안에 저장하도록 한다
+				//게시물 폴더도 이름이 겹치면 안되니까 이름은 primary키가 할 수 있을 것이다
+				//파일이 안올라가도 게시글이 추가되는 것, 파일이 올라가야 게시글이 추가되는 것
+				//어떤 것을 트랜잭션으로 할 것인지는 내가 선택할 문제이다
+				//1. 폴더 만들기 = 게시물 번호로
+				//2.트랜잭션 처리 하기
+				
+			}
+		}
+		
+		//게시물 insert
 		return count == 1;
 	}
 

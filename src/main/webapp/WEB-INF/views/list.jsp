@@ -33,6 +33,13 @@
 						<td>${boardList.id }</td>
 						<td>
 							<a href="/id/${boardList.id }"> ${boardList.title } </a>
+							<!-- 첨부파일이 몇개인지 적는 것이다 -->
+							<c:if test="${boardList.fileCount > 0 }">
+								<span class="badge rounded-pill text-bg-info">
+									<i class="fa-regular fa-images"></i>
+									${boardList.fileCount }
+								</span>
+							</c:if>
 						</td>
 						<td>${boardList.writer }</td>
 						<td>${boardList.inserted }</td>

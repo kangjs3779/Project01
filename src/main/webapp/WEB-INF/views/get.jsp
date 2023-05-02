@@ -22,6 +22,17 @@
 					<label for="title" class="form-label"> 제목 : </label>
 					<input type="text" class="form-control" value="${board.title }" id="title" readonly />
 				</div>
+				<!-- 그림 파일 출력 -->
+				<div class="mb-3">
+					<c:forEach items="${board.fileName }"  var="fileName">
+						<div class="mb-3">
+							<%--localhost:8081/image/게시물번호/fileName --%>
+							<img src="http://localhost:8080/image/${board.id }/${fileName}" alt="" />
+						</div>
+					</c:forEach>
+				</div>
+				
+				
 				<div>
 					<label for="body" class="form-label"> 본문 : </label>
 					<textarea type="text" class="form-control" id="body" readonly rows="10">${board.body }</textarea>

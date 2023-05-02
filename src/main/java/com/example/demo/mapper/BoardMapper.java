@@ -22,10 +22,17 @@ public interface BoardMapper {
 	// 보통 게시물을 볼 때 최신거를 먼저 보니까
 	
 	@Select("""
-			SELECT * 
-			FROM Board
-			WHERE id = #{id}
+			SELECT 
+				b.id,
+				b.title,
+				b.body,
+				b.inserted,
+				b.writer,
+				f.fileName
+			FROM Board b LEFT JOIN FileNames f ON b.id = f.boardId
+			WHERE b.id = #{id}
 			""")
+	@ResultMap("boardResultMap")
 	Board selectById(Integer id);
 	
 	@Update("""
@@ -56,11 +63,13 @@ public interface BoardMapper {
 			<script>
 			<bind name="pattern" value="'%' + search + '%'" />
 			SELECT
-				id,
-				title,
-				writer,
-				inserted
-			FROM Board
+				b.id,
+				b.title,
+				b.writer,
+				b.inserted,
+				COUNT(f.id) fileCount
+			FROM Board b LEFT JOIN FileNames f
+							ON b.id = f. boardId
 			<where>
 				<if test="(type == 'all') or (type == 'title')">
 					title LIKE #{pattern}
@@ -72,7 +81,8 @@ public interface BoardMapper {
 					OR writer LIKE #{pattern}				
 				</if>
 			</where>
-			ORDER BY id DESC
+			GROUP BY b.id
+			ORDER BY b.id DESC
 			LIMIT #{startIndex}, #{rowPerPage}
 			</script>
 			""")
@@ -97,5 +107,13 @@ public interface BoardMapper {
 			</script>
 			""")
 	Integer countAll(String search, String type);
+	
+	@Insert("""
+			INSERT INTO FileNames
+				(boardId, fileName)
+			VALUES
+				(#{boardId}, #{originalFilename})
+			""")
+	Integer insertFileName(int boardId, String originalFilename);
 	
 }
