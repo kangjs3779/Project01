@@ -11,6 +11,8 @@ import org.springframework.web.multipart.*;
 import com.example.demo.domain.*;
 import com.example.demo.mapper.*;
 
+import software.amazon.awssdk.services.s3.*;
+
 //어차피 @component가 포함되어 있다
 //특별한 component어노테이션이다 service역할을 하고 있는 component인 것이디
 @Service 
@@ -19,6 +21,11 @@ public class BoardService {
 	
 	@Autowired
 	private BoardMapper mapper;
+	@Autowired
+	private S3Client s3;
+	//스프링을 통해서 주입 받도록함 -> 그럼 자바빈으로 주입받아야함 -> 주고 configration파일로 함
+	@Value("${aws.s3.bucketName}")
+	private String bucketName;
 	
 	public List<Board> listBoard(Integer page, String search) {
 		List<Board> list =  mapper.selectAll();
@@ -33,15 +40,85 @@ public class BoardService {
 		return mapper.selectById(id);
 	}
 
-	public boolean modify(Board board) {
+	public boolean modify(Board board, List<String> removeFileNames, MultipartFile[] addFiles) throws Exception{
+		
+		//FileNames 테이블 삭제
+		if(removeFileNames != null && !removeFileNames.isEmpty()) {
+			for(String removeFileName : removeFileNames) {
+				//하드디스크에서 삭제
+				String path = "C:\\study\\upload\\" + board.getId() + "\\" + removeFileName;
+				File file = new File(path);
+				if(file.exists()) {
+					file.delete();
+				}
+				
+				//테이블에서 삭제
+				mapper.deleteFileNameByBoardIdAndFileName(board.getId(), removeFileName);
+			}
+		}
+		
+		//새 파일 추가(하드디스크에 저장하는 코드)
+		for(MultipartFile newFile : addFiles) {
+			if(newFile.getSize() > 0) {
+				//테이블에 파일명 추가
+				mapper.insertFileName(board.getId(), newFile.getOriginalFilename());
+				
+				
+				String fileName = newFile.getOriginalFilename();
+				String folder = "C:\\study\\upload\\" + board.getId(); 
+				String path = folder + "\\" + fileName;
+				
+				//디렉토리 없으면 만들기
+				File directory = new File(folder);
+				if(!directory.exists()) {
+					directory.mkdirs();
+				}
+				
+				//파일을 하드디스크에 저장
+				File file = new File(path);
+				newFile.transferTo(file);
+			}
+		}
+		
+		//게시글 테이블 수정
 		int count = mapper.update(board);
 		
 		return count == 1;
 	}
 
 	public boolean remove(int id) {
-		int count = mapper.deleteBtId(id);
-		return count == 1;
+		
+		//파일명 조회
+		List<String> fileNames = mapper.seletFileNamesByBoardId(id);
+		
+		//fileNames 테이블의 데이터 지우기
+		int countDeleteFileNames = mapper.deleteFileNameByBoardId(id);
+		
+		//board테이블에서 아이디에 따른 레코드 제거
+		//board.id를 참조하는 외래키가 fileNames테이블에 있음(boardId)
+		//외래키를 지우고 나서 지워야 한다
+		//기본키를 먼저 지우면 외래키가 참조할 수 없는 것을 참조하고 있으니까
+		//순서를 뒤로 빼준다
+		int countDeleteBoard = mapper.deleteBtId(id);
+		
+		//하드디스크의 파일 지우기
+		//파일명을 알아야 지울 수 있음(fileNames를 사용할 것임)
+		for(String fileName : fileNames) {
+			String path = "c:\\study\\upload\\" + id + "\\" + fileName;
+			File file = new File(path);
+			if(file.exists()) {
+				file.delete();
+			}
+		}
+		//폴더 지우기, 하드디스크에 있는 폴더 지우기
+		String folder = "C:\\study\\upload\\" + id;
+		File targetFolder = new File(folder);
+		if(targetFolder.exists()) {
+			targetFolder.delete();
+		}
+		
+		//게시물 테이블의 데이터 지우기
+		return countDeleteBoard == 1;
 	}
 
 	public boolean addBoard(Board board, MultipartFile[] files) throws Exception {

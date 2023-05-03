@@ -34,6 +34,9 @@ public interface BoardMapper {
 			""")
 	@ResultMap("boardResultMap")
 	Board selectById(Integer id);
+	//join으로 인해서 두개의 table이 이용이 됐는데
+	//조회한 값을 어느 자바빈의 프로퍼티에 넣어야 할지 명확하게 알려줘야한다
+	//그래서 resultMap을 통해서 특정자바빈의 프로퍼티에 값을 넣어줄 수 있다
 	
 	@Update("""
 			UPDATE Board
@@ -115,5 +118,26 @@ public interface BoardMapper {
 				(#{boardId}, #{originalFilename})
 			""")
 	Integer insertFileName(int boardId, String originalFilename);
+	
+	@Select("""
+			SELECT fileName 
+			FROM FileNames 
+			WHERE boardId = #{boardId}
+			""")
+	List<String> seletFileNamesByBoardId(int boardId);
+	
+	@Delete("""
+			DELETE FROM FileNames
+			WHERE boardId = #{boardId}
+			""")
+	Integer deleteFileNameByBoardId(int boardId);
+	
+	@Delete("""
+			DELETE FROM FileNames
+			WHERE boardId = #{boardId}
+				AND fileName = #{removeFileName}
+			""")
+	void deleteFileNameByBoardIdAndFileName(int boardId, String removeFileName);
+
 	
 }

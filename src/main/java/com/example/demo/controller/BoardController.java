@@ -13,6 +13,8 @@ import com.example.demo.domain.*;
 import com.example.demo.mapper.*;
 import com.example.demo.service.*;
 
+import lombok.*;
+
 @Controller
 @RequestMapping("/") // 이건 왜 씀???
 public class BoardController {
@@ -71,9 +73,13 @@ public class BoardController {
 
 //	@RequestMapping(value = "/modify/{id}", method=RequestMethod=POST)
 	@PostMapping("/modify/{id}")
-	public String modifyProcess(Board board, RedirectAttributes rttr) {
-//		System.out.println(board);
-		boolean ok = service.modify(board);
+	public String modifyProcess(
+			Board board, 
+			RedirectAttributes rttr,
+			@RequestParam(value = "files", required = false) MultipartFile[] addFiles,
+			@RequestParam(value = "removeFiles", required = false) List<String> removeFileNames) throws Exception {
+
+		boolean ok = service.modify(board, removeFileNames, addFiles);
 
 		if (ok) {
 			// 리디렉트할 때 특정값을 같이 보내도록함
