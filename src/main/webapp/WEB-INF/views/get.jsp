@@ -29,7 +29,6 @@
 					<c:forEach items="${board.fileName }"  var="fileName">
 						<div class="mb-3">
 							<%--localhost:8081/image/게시물번호/fileName --%>
-							<c:set var="bucketUrl" value="https://bucket0503-qkskkfkk.s3.ap-northeast-2.amazonaws.com/board"></c:set>
 							<img src="${bucketUrl }/${board.id }/${fileName}" alt="" />
 						</div>
 					</c:forEach>

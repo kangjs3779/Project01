@@ -30,12 +30,12 @@
 						<i class="fa-solid fa-trash-can"></i>
 						<input class="form-check-input" type="checkbox" name="removeFiles" role="switch" value="${fileName }" id="removeCheckbox${status.index }">
 					</div>
-						<label class="form-check-label" for="removeCheckbox${status.index }">
-							<div class="mb-3">
-								<%--localhost:8081/image/게시물번호/fileName --%>
-								<img src="http://localhost:8080/image/${board.id }/${fileName}" alt="" />
-							</div>
-						</label>
+					<label class="form-check-label" for="removeCheckbox${status.index }">
+						<div class="mb-3">
+							<%--localhost:8081/image/게시물번호/fileName --%>
+							<img src="${bucketUrl }/${board.id }/${fileName}" alt="" />
+						</div>
+					</label>
 				</c:forEach>
 			</div>
 
@@ -55,6 +55,9 @@
 			<div>
 				파일 :
 				<input type="file" multiple="multiple" name="files" accept="image/*" />
+				<div class="form-text">
+					총 20MB, 하나의 파일은 1MB를 초과할 수 없습니다.
+				</div>
 			</div>
 			<div>
 				<input type="submit" value="수정" />

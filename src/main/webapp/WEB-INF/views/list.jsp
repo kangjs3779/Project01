@@ -17,6 +17,7 @@
 
 	<div class="w-75 p-3 mx-auto">
 		<h1>게시물 목록 보기</h1>
+		<!-- 새로 작성된 코드 -->
 		<table class="table table-striped">
 			<thead>
 				<tr>
