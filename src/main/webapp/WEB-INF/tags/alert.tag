@@ -3,8 +3,8 @@
 <%@ attribute name="state"%>
 
 <c:if test="${not empty message }">
-	<div class="alert alert-${state == 'danger' ? 'danger' : 'primary' } d-flex align-items-center" role="alert">
+	<div class="alert alert-primary d-flex align-items-center" role="alert">
 		<i class="fa-solid fa-triangle-exclamation"></i>
-		<div>&nbsp${message }</div>
+		<div>${message }</div>
 	</div>
 </c:if>

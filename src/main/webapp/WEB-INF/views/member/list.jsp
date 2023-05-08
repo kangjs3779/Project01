@@ -12,7 +12,8 @@
 </head>
 <body>
 	<d:navBar current="memberlist"></d:navBar>
-
+	<d:alert state="primary" />
+	
 	<div class="container-lg">
 		<div class="row justify-content=center">
 			<div class="col-12 ">

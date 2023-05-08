@@ -1,13 +1,21 @@
 package com.example.demo.config;
 
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
-import jakarta.annotation.*;
-import jakarta.servlet.*;
-import software.amazon.awssdk.auth.credentials.*;
-import software.amazon.awssdk.regions.*;
-import software.amazon.awssdk.services.s3.*;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.ServletContext;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
 public class CustomConfiguration {
@@ -26,6 +34,17 @@ public class CustomConfiguration {
 	@PostConstruct
 	public void init() {
 		application.setAttribute("bucketUrl",bucketUrl);
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public SecurityFilterChain seFilterChain(HttpSecurity http) throws Exception {
+		http.csrf().disable();
+		return http.build();
 	}
 	
 	@Bean

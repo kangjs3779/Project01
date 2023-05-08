@@ -1,7 +1,7 @@
 package com.example.demo.domain;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.*;
 

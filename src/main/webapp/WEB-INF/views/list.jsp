@@ -13,7 +13,7 @@
 <body>
 
 	<d:navBar current="list" />
-	<d:alert state="danger" />
+	<d:alert state="primary" />
 
 	<div class="w-75 p-3 mx-auto">
 		<h1>게시물 목록 보기</h1>
