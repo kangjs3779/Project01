@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.access.prepost.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,19 @@ public class MemberController {
 	@Autowired
 	private MemberService service;
 	
+	@GetMapping("login")
+	public void loginForm() {
+		//forward
+	}
+	
 	@GetMapping("signup")
+	@PreAuthorize("isAnonymous()")
 	public void signupForm() {
 		
 	}
 	
 	@PostMapping("signup")
+	@PreAuthorize("isAuthenticated()")
 	public String signupProcess(Member member, RedirectAttributes rttr) {
 		
 		try {
@@ -40,6 +48,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("list")
+	@PreAuthorize("isAuthenticated()")
 	public void list(Model model) {
 		List<Member> memberList = service.listMember();
 		model.addAttribute("members", memberList);
@@ -47,12 +56,14 @@ public class MemberController {
 	
 	// 경로 : /member/info?id=asdf
 	@GetMapping("info")
+	@PreAuthorize("isAuthenticated()")
 	public void info(String id, Model model) {
 		Member member = service.get(id);
 		model.addAttribute("member", member);
 	}
 	
 	@PostMapping("remove")
+	@PreAuthorize("isAuthenticated()")
 	public String remove(Member member, RedirectAttributes rttr) {
 		boolean ok = service.remove(member);
 		if (ok) {
@@ -65,6 +76,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("modify")
+	@PreAuthorize("isAuthenticated()")
 	public void modifyForm(String id, Model model) {
 		//view로 포워드 
 		Member member = service.get(id);
@@ -75,6 +87,7 @@ public class MemberController {
 	}
 	
 	@PostMapping("modify")
+	@PreAuthorize("isAuthenticated()")
 	public String modifyProcess(Member member, 
 			RedirectAttributes rttr,
 			String oldPassword) {

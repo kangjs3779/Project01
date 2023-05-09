@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.access.prepost.*;
+import org.springframework.security.core.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +66,7 @@ public class BoardController {
 	}
 
 	@GetMapping("/modify/{id}")
+	@PreAuthorize("isAuthenticated() and @customSecurityChecker.checkBoardWriter(authentication, #id)")
 	public String modify(@PathVariable("id") Integer id, Model model) {
 		// 조회하려는 애임
 
@@ -73,6 +76,8 @@ public class BoardController {
 
 //	@RequestMapping(value = "/modify/{id}", method=RequestMethod=POST)
 	@PostMapping("/modify/{id}")
+	//본인이 작성한 글만 수정이 가능함(게시글의 작성자와 로그인시 토큰에 저장된 작성자가 같은지 확인)
+	@PreAuthorize("isAuthenticated() and @customSecurityChecker.checkBoardWriter(authentication, #board.id)")
 	public String modifyProcess(
 			Board board, 
 			RedirectAttributes rttr,
@@ -99,6 +104,7 @@ public class BoardController {
 	}
 
 	@PostMapping("remove")
+	@PreAuthorize("isAuthenticated() and @customSecurityChecker.checkBoardWriter(authentication, #id)")
 	public String remove(int id, RedirectAttributes rttr) {
 		boolean ok = service.remove(id);
 		if (ok) {
@@ -110,18 +116,22 @@ public class BoardController {
 	}
 
 	@GetMapping("add")
+	@PreAuthorize("isAuthenticated()")
 	public void addForm() {
 		// 게시물 작성 form (view)로 포워드
 
 	}
 
 	@PostMapping("add")
+	@PreAuthorize("isAuthenticated()")
 	public String addProcess(
 			Board board, 
 			RedirectAttributes rt,
-			@RequestParam("files") MultipartFile[] files) throws Exception {
+			@RequestParam("files") MultipartFile[] files,
+			Authentication authentication) throws Exception {
 		// 새 게시물 db에 추가
 		// 파라미터에 String title...이렇게 적어도 되는데 자바빈에 프로퍼티 다 있으니까
+		board.setWriter(authentication.getName());
 		boolean ok = service.addBoard(board, files);
 		if (ok) {
 			rt.addFlashAttribute("message", board.getTitle() + " 게시글이 추가가 되었습니다");

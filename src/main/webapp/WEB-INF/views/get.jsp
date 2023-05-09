@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="d" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,22 +20,22 @@
 
 		<div class="row justify-content-center">
 			<div class="col-12 col-md-8 col-lg-6">
-				<h1>${board.id }번 게시물 보기</h1>
+				<h1>${board.id }번게시물 보기</h1>
 				<div>
 					<label for="title" class="form-label"> 제목 : </label>
 					<input type="text" class="form-control" value="${board.title }" id="title" readonly />
 				</div>
 				<!-- 그림 파일 출력 -->
 				<div class="mb-3">
-					<c:forEach items="${board.fileName }"  var="fileName">
+					<c:forEach items="${board.fileName }" var="fileName">
 						<div class="mb-3">
 							<%--localhost:8081/image/게시물번호/fileName --%>
 							<img src="${bucketUrl }/${board.id }/${fileName}" alt="" />
 						</div>
 					</c:forEach>
 				</div>
-				
-				
+
+
 				<div>
 					<label for="body" class="form-label"> 본문 : </label>
 					<textarea type="text" class="form-control" id="body" readonly rows="10">${board.body }</textarea>
@@ -49,8 +50,15 @@
 				</div>
 				<br />
 				<div>
-					<a class="btn btn-secondary" href="/modify/${board.id }">수정하기</a>
-					<button id="removeButton" class="btn btn-danger" form="removeForm" type="submit">삭제하기</button>
+					<sec:authorize access="isAuthenticated() ">
+						<sec:authentication property="name" var="userId"/>
+						<c:if test="${userId eq board.writer }">
+							<a class="btn btn-secondary" href="/modify/${board.id }">수정하기</a>
+						</c:if>
+					</sec:authorize>
+					<sec:authorize access="isAuthenticated()">
+						<button id="removeButton" class="btn btn-danger" form="removeForm" type="submit">삭제하기</button>
+					</sec:authorize>
 				</div>
 				<br />
 			</div>
@@ -67,8 +75,7 @@
 
 	<!-- 삭제 확인하는 모달 추가 -->
 	<!-- 버튼이 removeForm을 전달하도록 해야함 -->
-
-
+	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
