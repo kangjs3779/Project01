@@ -20,6 +20,8 @@ public class MemberService {
 	private MemberMapper mapper;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private BoardService boardService;
 
 	public boolean signup(Member member) {
 
@@ -47,6 +49,10 @@ public class MemberService {
 		int count = 0;
 		if (passwordEncoder.matches(member.getPassword(), oldMember.getPassword())) {
 			// 암호가 같으면??
+			
+			// 이 회원이 작성한 게시물 row 삭제
+			boardService.removeByWriter(member.getId());
+			//회원 테이블 삭제
 			count = mapper.deleteById(member);
 
 		} else {

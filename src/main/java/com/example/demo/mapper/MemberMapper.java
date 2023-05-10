@@ -29,16 +29,10 @@ public interface MemberMapper {
 	List<Member> selectAllMember();
 	
 	@Select("""
-			SELECT
-				id,
-				password,
-				nickName,
-				email,
-				inserted
-			FROM
-				Member
-			WHERE id = #{id}
+			SELECT * FROM Member m LEFT JOIN MemberAuthority ma ON m.id = ma.memberId
+			WHERE m.id = #{id}
 			""")
+	@ResultMap("memberMap")
 	Member selectById(String id);
 	
 	@Delete("""

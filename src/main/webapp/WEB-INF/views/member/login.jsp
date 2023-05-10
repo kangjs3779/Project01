@@ -21,7 +21,7 @@
 					<input class="form-control" type="text" name="username" id="inputId">
 					<br />
 					<label for="inputPassword">암호</label>
-					<input class="form-control" type="text" name="password" id="inputPassword" />
+					<input class="form-control" type="password" name="password" id="inputPassword" />
 					<br />
 					<input class="btn btn-primary" type="submit" value="로그인" />
 				</form>

@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="d" tagdir="/WEB-INF/tags" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="d" tagdir="/WEB-INF/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,34 +21,49 @@
 				<form method="post">
 					<div class="mb-3">
 						<label for="inputId" class="form-label">아이디</label>
-						<input type="text" class="form-control" name="id"  id="inputId" value="${member.id }" />
+						<input type="text" class="form-control" name="id" id="inputId" value="${member.id }" />
 					</div>
 					<div class="mb-3">
 						<label for="inputPassword" class="form-label">패스워드</label>
-						<input type="password" class="form-control" name="password" id="inputPassword" value="${member.password }"/>
+						<input type="password" class="form-control" name="password" id="inputPassword" value="${member.password }" />
 					</div>
 					<div class="mb-3">
+						<label for="inputPasswordCheck" class="form-label">패스워드 확인</label>
+						<input type="password" class="form-control" id="inputPasswordCheck" />
+
+						<div id="passwordSuccessText" class="d-none form-text text-primary">
+							<i class="fa-solid fa-check"></i>
+							패스워드가 일치 합니다.
+						</div>
+						<div id="passwordFailText" class="d-none form-text text-danger">
+							<i class="fa-solid fa-triangle-exclamation"></i>
+							패스워드가 일치하지 않습니다.
+						</div>
+						<!-- 실제 업무에서는 패스워드가 일치하는지 컨트롤러에서 확인을 해야 한다 -->
+						<!-- 백엔드에서는 프론트를 믿으면 안된다 꼼꼼하게 확인을 해야 한다 -->
+					</div>
+					
+					<div class="mb-3">
 						<label for="inputNickname" class="form-label">별명</label>
-						<input type="text" class="form-control" name="nickName" id="inputNickname" value="${member.nickName }"/>
+						<input type="text" class="form-control" name="nickName" id="inputNickname" value="${member.nickName }" />
 					</div>
 					<div class="mb-3">
 						<label for="inputEmail" class="form-label">이메일</label>
-						<input type="email" class="form-control" name="email" id="inputEmail" value="${member.email }"/>
+						<input type="email" class="form-control" name="email" id="inputEmail" value="${member.email }" />
 					</div>
-					<div class="mb-3">
-						<input type="submit" class="form-control" value="가입" />
+					<div class="d-grid mb-3">
+						<input id="signupSubmit" type="submit" class="btn btn-outline-primary disabled" value="가입" />
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 
-	
+
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	
-	<script>
+	<script src="/js/member/signup.js"></script>
 
-	</script>
 </body>
 </html>

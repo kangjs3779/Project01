@@ -27,11 +27,18 @@
 						<a class="nav-link ${current == 'signup' ? 'active' : '' }" href="/member/signup">회원가입</a>
 					</li>
 				</sec:authorize>
-				<sec:authorize access="isAuthenticated()">
+				<sec:authorize access="hasAuthority('admin')">
 					<li class="nav-item">
 						<a class="nav-link ${current == 'memberlist' ? 'active' : '' }" href="/member/list">회원목록</a>
 					</li>
 				</sec:authorize>
+				
+				<sec:authorize access="isAuthenticated()">
+					<li class="nav-item">
+						<a class="nav-link ${current == 'memberInfo' ? 'active' : '' }" href="/member/info?id=<sec:authentication property="name" />">회원 정보</a>
+					</li>
+				</sec:authorize>
+				
 				<sec:authorize access="isAnonymous()">
 					<li class="nav-item">
 						<a class="nav-link ${current == 'login' ? 'active' : '' }" href="/member/login">로그인</a>
@@ -63,6 +70,7 @@
 	</div>
 </nav>
 
-<div>
+<%-- <div>
 	<sec:authentication property="principal" />
-</div>
+	로그인 확인 정보 코드
+</div> --%>

@@ -160,6 +160,7 @@ public class BoardService {
 			//파일이 있을 때만 저장을 해야 하니까
 			if(file.getSize() > 0) {
 				String objectKey = "board/" + board.getId() + "/" + file.getOriginalFilename();
+				//파일이 저장될 경로
 				
 				PutObjectRequest por = PutObjectRequest.builder()
 						.bucket(bucketName)
@@ -238,6 +239,14 @@ public class BoardService {
 		return Map.of("pageInfo", pageInfo,
 					  "boardList", list);
 		// 페이지네이션이 필요한 정보
+	}
+	
+	public void removeByWriter(String writer) {
+		List<Integer> idList = mapper.selectIdByWriter(writer);
+		
+		for(Integer id : idList) {
+			remove(id);
+		}
 	}
 	
 }
