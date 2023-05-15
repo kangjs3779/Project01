@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.core.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 import org.springframework.web.multipart.*;
@@ -21,6 +22,8 @@ import software.amazon.awssdk.services.s3.model.*;
 @Transactional(rollbackFor = Exception.class)
 public class BoardService {
 	
+	@Autowired
+	private BoardLikeMapper likeMapper;
 	@Autowired
 	private BoardMapper mapper;
 	@Autowired
@@ -249,4 +252,19 @@ public class BoardService {
 		}
 	}
 	
+	public Map<String, Object> like(Like like, Authentication authentication) {
+		Map<String, Object> result = new HashMap<>();
+		
+		result.put("like", false);
+		
+		like.setMemberId(authentication.getName());
+		Integer deleteCnt = likeMapper.delete(like);
+		
+		if (deleteCnt != 1) {
+			Integer insertCnt = likeMapper.insert(like);
+			result.put("like", true);
+		}
+		
+		return result;
+	}
 }

@@ -20,7 +20,20 @@
 
 		<div class="row justify-content-center">
 			<div class="col-12 col-md-8 col-lg-6">
-				<h1>${board.id }번게시물 보기</h1>
+				<h1>
+					<span id="boardIdText"> ${board.id }</span>
+					번게시물보기
+				</h1>
+				<div>
+					<h1>
+						<span id="likeIcon">
+							<i class="fa-regular fa-heart"></i>
+						</span>
+						<span id="likeNumber">
+							<%-- ${board.like }  --%>
+						</span>
+					</h1>
+				</div>
 				<div>
 					<label for="title" class="form-label"> 제목 : </label>
 					<input type="text" class="form-control" value="${board.title }" id="title" readonly />
@@ -51,7 +64,7 @@
 				<br />
 				<div>
 					<sec:authorize access="isAuthenticated() ">
-						<sec:authentication property="name" var="userId"/>
+						<sec:authentication property="name" var="userId" />
 						<c:if test="${userId eq board.writer }">
 							<a class="btn btn-secondary" href="/modify/${board.id }">수정하기</a>
 						</c:if>
@@ -69,13 +82,13 @@
 	<!-- 숨겨져있는 폼을 만들어서 작성함, 자바스크립트로도 작성할 수 있음 -->
 	<div class="d-none">
 		<form action="/remove" method="post" id="removeForm">
-			<input type="hidden" name="id" value="${board.id }" />
+			<input id="inputId" type="hidden" name="id" value="${board.id }" />
 		</form>
 	</div>
 
 	<!-- 삭제 확인하는 모달 추가 -->
 	<!-- 버튼이 removeForm을 전달하도록 해야함 -->
-	
+
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -91,5 +104,6 @@
 			}
 		});
 	</script>
+	<script src="/js/board/like.js"></script>
 </body>
 </html>

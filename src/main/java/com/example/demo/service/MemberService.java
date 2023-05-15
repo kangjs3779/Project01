@@ -2,20 +2,21 @@ package com.example.demo.service;
 
 
 
-import java.util.List;
+import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.core.*;
+import org.springframework.security.crypto.password.*;
+import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
 
-import com.example.demo.domain.Member;
-import com.example.demo.mapper.MemberMapper;
+import com.example.demo.domain.*;
+import com.example.demo.mapper.*;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class MemberService {
-
+	
 	@Autowired
 	private MemberMapper mapper;
 	@Autowired
@@ -79,4 +80,31 @@ public class MemberService {
 
 		return count == 1;
 	}
+
+	public Map<String, Object> checkId(String id) {
+		Member member = mapper.selectById(id);
+		
+		return Map.of("available", member == null);
+	}
+
+	public Map<String, Object> checkNickName(String nickName, Authentication authentication) {
+		Member member = mapper.selectByNickName(nickName);
+		if(authentication != null) {
+			Member oldMember = mapper.selectById(authentication.getName());
+			
+			return Map.of("available", member == null || oldMember.getNickName().equals(nickName));
+		} else {
+			return Map.of("available", member == null);
+		}
+		
+	}
+
+	public Map<String, Object> checkEmail(String email) {
+		Member member = mapper.selectByEmail(email);
+		return Map.of("available", member == null);
+	}
+
+	
+
+	
 }
