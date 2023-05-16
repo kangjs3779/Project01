@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.*;
 import org.springframework.security.core.*;
 import org.springframework.stereotype.*;
@@ -53,10 +54,13 @@ public class BoardController {
 	}
 
 	@GetMapping("/id/{id}")
-	public String board(@PathVariable("id") Integer id, Model model) {
+	public String board(
+			@PathVariable("id") Integer id, 
+			Model model,
+			Authentication authentication) {
 		// 1.request param
 		// 2. business logic
-		Board board = service.getBoard(id);
+		Board board = service.getBoard(id, authentication);
 		System.out.println(board);
 		// 3. add attribute
 		model.addAttribute("board", board);
@@ -145,10 +149,27 @@ public class BoardController {
 
 	@PostMapping("/like")
 	@ResponseBody
-	public Map<String, Object> like(
+	public ResponseEntity<Map<String, Object>> like(
 			@RequestBody Like like,
 			Authentication authentication) {
-
-		return service.like(like, authentication);
+		System.out.println(authentication);
+		
+		if(authentication == null) {
+			//로그인이 안되어 있으면
+			return ResponseEntity
+					.status(403)
+					.body(Map.of("message", "로그인 후 좋아요 클릭 해주세요."));
+					//응답 정보에 403을 주고 map타입의 값을 응답본문에 붙여서 반환
+					//403 : 서버가 요청을 이해했지만 권한이 없어서 접근이 불가능한 것을 말한다
+		} else {
+			//로그인이 되어 있으면
+			return ResponseEntity
+					.ok()
+					.body(service.like(like, authentication));
+					//응답 본문에 like메소드의 결과를 반환
+					//service에서 만들었던 map타입의 result변수가 body의 파라미터로 들어감
+					//응답 본문에 이 map타입 정보가 붙어서 감
+		}
+		
 	}
 }

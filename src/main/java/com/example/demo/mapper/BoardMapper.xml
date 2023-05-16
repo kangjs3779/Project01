@@ -13,6 +13,7 @@
 		<result column="writer" property="writer"/>
 		<!-- 어떤 컬럼이 어떤 프로퍼티에 매핑이 되어야 하는가 -->
 		<!-- 컬럼이름은 쿼리에서 따왔음, 프로퍼티는 자바빈에 있는 이름 -->
+		<result column="likeCount" property="likeCount"></result>
 		<collection property="fileName" ofType="string">
 			<result column="fileName"/>
 		</collection>

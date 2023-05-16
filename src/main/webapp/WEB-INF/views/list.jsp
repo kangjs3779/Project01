@@ -22,6 +22,7 @@
 			<thead>
 				<tr>
 					<th>#</th>
+					<th><i class="fa-solid fa-heart"></i></th>
 					<th>title</th>
 					<th>writer</th>
 					<th>updated</th>
@@ -32,6 +33,7 @@
 				<c:forEach items="${boardList }" var="boardList">
 					<tr>
 						<td>${boardList.id }</td>
+						<td>${boardList.likeCount }</td>
 						<td>
 							<a href="/id/${boardList.id }"> ${boardList.title } </a>
 							<!-- 첨부파일이 몇개인지 적는 것이다 -->

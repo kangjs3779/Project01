@@ -12,9 +12,10 @@ public class Board {
 	private String body;
 	private LocalDateTime inserted;
 	private String writer;
-	
+	private Boolean liked;
 	private List<String> fileName;
 	private Integer fileCount;
+	private Integer likeCount;
 	
 	
 	

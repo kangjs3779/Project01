@@ -41,8 +41,22 @@ public class BoardService {
 		// 큰 프로젝트는 이렇게 한다
 	}
 
-	public Board getBoard(Integer id) {
-		return mapper.selectById(id);
+	public Board getBoard(Integer id, Authentication authentication) {
+		
+		Board board = mapper.selectById(id);
+		//현재 로그인한 사람이 이 게시물에 좋아요 했는지?
+		
+		//로그인한 사람의 정보를 알아야 함(Authentication)
+		if (authentication != null) {
+			//현재로그인한 사람을 조회해서
+			Like like = likeMapper.select(id, authentication.getName());
+			if(like != null) {
+				//하트가 눌러져 있으면 true
+				board.setLiked(true);
+			}
+		}
+		
+		return board;
 	}
 
 	public boolean modify(Board board, List<String> removeFileNames, MultipartFile[] addFiles) throws Exception{
@@ -110,6 +124,10 @@ public class BoardService {
 	}
 
 	public boolean remove(int id) {
+		
+		//좋아요 테이블 지우기
+		likeMapper.deleteByBoardId(id);
+		//좋아요가 눌린 게시글을 삭제하면 좋아요 레코드도 삭제된다
 		
 		//파일명 조회
 		List<String> fileNames = mapper.seletFileNamesByBoardId(id);
@@ -256,15 +274,38 @@ public class BoardService {
 		Map<String, Object> result = new HashMap<>();
 		
 		result.put("like", false);
+		//like의 값은 false가 기본값
 		
 		like.setMemberId(authentication.getName());
+		//like자바빈 안에는 회원아이디와 게시글 번호 프로퍼티가 있는데
+		//게시번호만 받았으니까 회원아이디를 인증서에서 받아온 username을 넣어준다
 		Integer deleteCnt = likeMapper.delete(like);
+		//해당 게시글의 좋아요를 지운 개수를 반환하여 deleteCnt변수안에 넣는다
 		
 		if (deleteCnt != 1) {
+			//지원진게 없으면 = 좋아요를 눌렀던 정보가 없으면 = 좋아요를 누른 게시글이 아니면
 			Integer insertCnt = likeMapper.insert(like);
+			//좋아요 정보를 넣는다
 			result.put("like", true);
+			//그리고 like의 값을 true로 바꿔준다
 		}
+		//지원진게 있으면 = 좋아요를 눌렀던 정보가 있으면 = 좋아요를 누른 게시글이 있으면
+		//게시글을 지운다
+		
+		Integer count = likeMapper.countByBoardId(like.getBoardId());
+		//like 자바빈의 게시글 번호를 이용해서 해당 번호의 게시글에
+		//좋아요 정보가 몇개있는지 조회하는 쿼리의 반환값을 count안에 넣는다
+		
+		result.put("count", count);
+		//result에 count라는 이름으로 그 숫자를 넣는다
 		
 		return result;
+		//그래서 result안에 담긴 값은 like가 눌려있으면 false, 안눌려있으면 ture를 반환하는 정보와
+		//해당 게시글의 좋아요 개수 정보가 담겨있음
+	}
+
+	public Board getBoard(Integer id) {
+		//수정할 때에는 좋아요 정보가 필요하지 않아서 그냥 null을 넣었음
+		return getBoard(id,null);
 	}
 }
