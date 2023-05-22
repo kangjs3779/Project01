@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.core.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,26 @@ public class CommentService {
 	
 
 	
-	public List<Comment> list(Integer boardId) {
-		
-		return mapper.selectAllByBoardId(boardId);
+	public List<Comment> list(Integer boardId, Authentication authentication) {
+		List<Comment> comments = mapper.selectAllByBoardId(boardId);
+		if(authentication != null) {
+//			List<Comment> commentsWithEditable =
+//			comments.stream()
+//				.map(c -> {
+//					c.setEditable(c.getMemberId().equals(authentication.getName()));
+//					return c;
+//				})
+//				.toList();
+			for(Comment comment : comments) {
+				comment.setEditable(comment.getMemberId().equals(authentication.getName()));
+			}
+		}
+		return comments;
 	}
 
-	public Map<String, Object> add(Comment comment) {
-		comment.setMemberId("7777");
+	public Map<String, Object> add(Comment comment, Authentication authentication) {
+//		comment.setMemberId("7777");
+		comment.setMemberId(authentication.getName());
 		int cnt = mapper.insert(comment);
 		var res = new HashMap<String, Object>();
 		if(cnt ==1) {

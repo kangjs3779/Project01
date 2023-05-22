@@ -34,7 +34,7 @@ public interface CommentMapper {
 			FROM Comment
 			WHERE id = #{id}
 			""")
-	Comment selectBtId(Integer id);
+	Comment selectById(Integer id);
 	
 	@Update("""
 			UPDATE Comment
